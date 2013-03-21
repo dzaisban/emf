@@ -32,7 +32,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -156,13 +155,13 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
      * </p>
      * @return an open output stream.
      * @exception IOException if there is a problem obtaining an open output stream.
-     * @see IWorkspaceRoot#getFile(org.eclipse.core.runtime.IPath)
+     * @see IEcorePlugin.getWorkspaceRoot()#getFile(org.eclipse.core.runtime.IPath)
      * @see PlatformResourceURIHandlerImpl.PlatformResourceOutputStream
      * @see IFile#setContents(InputStream, boolean, boolean, IProgressMonitor)
      */
     public static OutputStream createPlatformResourceOutputStream(String platformResourcePath, Map<?, ?> options) throws IOException
     {
-      IFile file = workspaceRoot.getFile(new Path(platformResourcePath));
+      IFile file = EcorePlugin.getWorkspaceRoot().getFile(new Path(platformResourcePath));
       @SuppressWarnings("unchecked")
       final Map<Object, Object> response = options == null ? null : (Map<Object, Object>)options.get(URIConverter.OPTION_RESPONSE);
       return
@@ -192,13 +191,13 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
      * This implementation uses {@link IFile#getContents() IFile.getContents}.
      * </p>
      * @return an open input stream.
-     * @see IWorkspaceRoot#getFile(org.eclipse.core.runtime.IPath)
+     * @see IEcorePlugin.getWorkspaceRoot()#getFile(org.eclipse.core.runtime.IPath)
      * @see IFile#getContents()
      * @exception IOException if there is a problem obtaining an open input stream.
      */
     public static InputStream createPlatformResourceInputStream(String platformResourcePath, Map<?, ?> options) throws IOException
     {
-      IFile file = workspaceRoot.getFile(new Path(platformResourcePath));
+      IFile file = EcorePlugin.getWorkspaceRoot().getFile(new Path(platformResourcePath));
       try
       {
         if (!file.isSynchronized(IResource.DEPTH_ONE))
@@ -225,7 +224,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
 
     public static void delete(String platformResourcePath, Map<?, ?> options) throws IOException
     {
-      IFile file = workspaceRoot.getFile(new Path(platformResourcePath));
+      IFile file = EcorePlugin.getWorkspaceRoot().getFile(new Path(platformResourcePath));
       try
       {
         file.delete(true, null);
@@ -238,13 +237,13 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
 
     public static boolean exists(String platformResourcePath, Map<?, ?> options)
     {
-      IResource resource = workspaceRoot.findMember(new Path(platformResourcePath));
+      IResource resource = EcorePlugin.getWorkspaceRoot().findMember(new Path(platformResourcePath));
       return resource != null;
     }
 
     public static Map<String, ?> attributes(String platformResourcePath, Map<?, ?> options)
     {
-      IResource resource = workspaceRoot.findMember(new Path(platformResourcePath));
+      IResource resource = EcorePlugin.getWorkspaceRoot().findMember(new Path(platformResourcePath));
       Map<String, Object> result = new HashMap<String, Object>();
       if (resource != null)
       {
@@ -299,7 +298,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
 
     public static void updateAttributes(String platformResourcePath, Map<String, ?> attributes, Map<?, ?> options) throws IOException
     {
-      IResource resource = workspaceRoot.findMember(new Path(platformResourcePath));
+      IResource resource = EcorePlugin.getWorkspaceRoot().findMember(new Path(platformResourcePath));
       if (resource == null)
       {
         throw new FileNotFoundException("The resource " + platformResourcePath + " does not exist");
@@ -363,7 +362,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
 
     public static IContentDescription getContentDescription(String platformResourcePath, Map<?, ?> options) throws IOException
     {
-      IFile file = workspaceRoot.getFile(new Path(platformResourcePath));
+      IFile file = EcorePlugin.getWorkspaceRoot().getFile(new Path(platformResourcePath));
       try
       {
         return file.getContentDescription();
@@ -374,12 +373,6 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
       }
     }
   }
-
-  /**
-   * The cached Eclipse workspace.
-   */
-  protected static IWorkspaceRoot workspaceRoot = EcorePlugin.getWorkspaceRoot();
-
 
   /**
    * Creates an instance.
@@ -413,7 +406,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public OutputStream createOutputStream(URI uri, Map<?, ?> options) throws IOException
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       return WorkbenchHelper.createPlatformResourceOutputStream(platformResourcePath, options);
     }
@@ -447,7 +440,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public InputStream createInputStream(URI uri, Map<?, ?> options) throws IOException
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       return WorkbenchHelper.createPlatformResourceInputStream(platformResourcePath, options);
     }
@@ -467,7 +460,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public void delete(URI uri, Map<?, ?> options) throws IOException
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       WorkbenchHelper.delete(platformResourcePath, options);
     }
@@ -489,7 +482,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public boolean exists(URI uri, Map<?, ?> options)
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       return WorkbenchHelper.exists(platformResourcePath, options);
     }
@@ -504,7 +497,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public Map<String, ?> getAttributes(URI uri, Map<?, ?> options)
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       return WorkbenchHelper.attributes(platformResourcePath, options);
     }
@@ -519,7 +512,7 @@ public class PlatformResourceURIHandlerImpl extends URIHandlerImpl
   public void setAttributes(URI uri, Map<String, ?> attributes, Map<?, ?> options) throws IOException
   {
     String platformResourcePath = uri.toPlatformString(true);
-    if (workspaceRoot != null)
+    if (EcorePlugin.getWorkspaceRoot() != null)
     {
       WorkbenchHelper.updateAttributes(platformResourcePath, attributes, options);
     }

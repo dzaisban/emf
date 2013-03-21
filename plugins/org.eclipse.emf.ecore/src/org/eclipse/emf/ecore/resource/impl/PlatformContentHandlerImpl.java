@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.ContentHandler;
 
 public class PlatformContentHandlerImpl extends ContentHandlerImpl
@@ -83,7 +84,7 @@ public class PlatformContentHandlerImpl extends ContentHandlerImpl
   public Map<String, Object> contentDescription(URI uri, InputStream inputStream, Map<?, ?> options, Map<Object, Object> context) throws IOException
   {
     IContentDescription contentDescription;
-    if (uri.isPlatformResource() && PlatformResourceURIHandlerImpl.workspaceRoot != null)
+    if (uri.isPlatformResource() && EcorePlugin.getWorkspaceRoot() != null)
     {
       contentDescription = PlatformResourceURIHandlerImpl.WorkbenchHelper.getContentDescription(uri.toPlatformString(true), options);
     }

@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.emf.ecore"
       label="%featureName"
-      version="2.6.1.qualifier"
+      version="2.6.1.vqualifier"
       provider-name="%providerName">
 
    <description>
